@@ -1,4 +1,4 @@
-# fly.toml — configuration for maxkorzhpaymentbot
+# fly.toml — конфигурация для maxkorzhpaymentbot
 app = "maxkorzhpaymentbot"
 primary_region = "waw"
 
@@ -9,8 +9,8 @@ primary_region = "waw"
   PORT = "8080"
 
 [http_service]
-  internal_port = 8080
-  force_https = true
-  auto_start_machines = true
-  min_machines_running = 1
-  processes = ["app"]
+  internal_port         = 8080
+  force_https           = true
+  auto_start_machines   = true
+  min_machines_running  = 1
+  processes             = ["app"]
