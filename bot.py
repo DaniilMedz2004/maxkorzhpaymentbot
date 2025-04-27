@@ -1,7 +1,8 @@
-
 import os
 import logging
+import threading
 from telebot import TeleBot, types
+from flask import Flask
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -15,6 +16,18 @@ if not token:
 # Initialize bot
 bot = TeleBot(token)
 print("🐍 Bot is starting…", flush=True)
+
+# Flask app for health checks
+app = Flask(__name__)
+
+@app.route("/")
+def health_check():
+    return "OK"
+
+def run_web():
+    port = int(os.environ.get("PORT", 8080))
+    logging.info(f"Starting web server on port {port}")
+    app.run(host="0.0.0.0", port=port)
 
 # Bot settings
 wallet_address = "TEz82XF79p1UbkXgzHiimfskyJGjrEXXWg"
@@ -36,16 +49,16 @@ payment_texts = {
 }
 
 # Helper functions
-
 def send_language_selection(chat_id, reply_to_message_id=None):
     markup = types.InlineKeyboardMarkup()
     for code, name in languages.items():
         markup.add(types.InlineKeyboardButton(text=name, callback_data=code))
-    bot.send_message(chat_id, "Select your language / Выберите язык / Wybierz język / Виберіть мову:",
-                     reply_markup=markup, reply_to_message_id=reply_to_message_id)
+    bot.send_message(chat_id,
+                     "Select your language / Выберите язык / Wybierz język / Виберіть мову:",
+                     reply_markup=markup,
+                     reply_to_message_id=reply_to_message_id)
 
 # Handlers
-
 @bot.message_handler(commands=['start'])
 def start_handler(message):
     chat_id = message.chat.id
@@ -82,6 +95,7 @@ def callback_buttons(call):
         logging.info(f"User {chat_id} clicked Back")
         send_language_selection(chat_id, reply_to_message_id=message_id)
 
-# Start polling
+# Start web server in background thread and polling
 if __name__ == '__main__':
+    threading.Thread(target=run_web, daemon=True).start()
     bot.polling(none_stop=True)
