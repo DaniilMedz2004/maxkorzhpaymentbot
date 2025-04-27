@@ -24,3 +24,6 @@ primary_region = 'waw'
   memory = '1gb'
   cpu_kind = 'shared'
   cpus = 1
+  [build]
+  dockerfile = "Dockerfile"
+
