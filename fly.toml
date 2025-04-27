@@ -1,5 +1,4 @@
-# fly.toml - configuration for maxkorzhpaymentbot
-# Automatically generated with Docker build
+# fly.toml — конфигурация приложения maxkorzhpaymentbot
 app = "maxkorzhpaymentbot"
 primary_region = "waw"
 
@@ -10,16 +9,9 @@ primary_region = "waw"
   PORT = "8080"
 
 [http_service]
-  internal_port = 8080
-  force_https = true
-  # keep at least one machine running
-  auto_stop_machines = "stop"
+  internal_port    = 8080
+  force_https      = true
   auto_start_machines = true
+  auto_stop_machines  = "never"
   min_machines_running = 1
-  processes = ["app"]
-
-# Virtual machine configuration (optional)
-[vm]
-  memory = "1gb"
-  cpu_kind = "shared"
-  cpus = 1
+  processes          = ["app"]
